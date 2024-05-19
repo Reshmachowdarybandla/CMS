@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mysql = require("mysql2");
+const moment = require("moment");
 const db = mysql.createPool({
     host:"localhost",
     user:"root",
@@ -25,8 +26,9 @@ app.get("/api/get", (req,res)=>{
 
 app.post("/api/post", (req, res)=>{
     const {name, email, mobileNumber, dateOfBirth} = req.body;
+    const formattedDate = moment(dateOfBirth).format('DD-MMM-YYYY');
     const sqlInsert = "INSERT INTO entity (name, email, mobileNumber, dateOfBirth) VALUES (?, ?, ? ,?)";
-    db.query(sqlInsert, [name,email,mobileNumber,dateOfBirth], (error, result)=>{
+    db.query(sqlInsert, [name,email,mobileNumber,formattedDate], (error, result)=>{
         if(error){
             console.log(error);
         }
